@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: cms-backend
+    runtime: node
+    region: oregon          # change to match your Neon DB region for lower latency
+    plan: free              # upgrade to starter for always-on (no cold starts)
+
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+
+    healthCheckPath: /health
+
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+      # Set DATABASE_URL and CORS_ORIGIN via the Render dashboard (not here)
+      # so secrets are never committed to source control.
+      - key: DATABASE_URL
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false
+      - key: RATE_LIMIT_WINDOW_MS
+        value: "900000"
+      - key: RATE_LIMIT_MAX_REQUESTS
+        value: "100"
