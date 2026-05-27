@@ -2,7 +2,7 @@
   "compilerOptions": {
     /* Language & environment */
     "target": "ES2022",
-    "module": "CommonJS",
+    "module": "NodeNext",
     "lib": ["ES2022"],
 
     /* Paths */
@@ -10,7 +10,7 @@
     "outDir": "./dist",
 
     /* Module resolution */
-    "moduleResolution": "node",
+    "moduleResolution": "NodeNext",
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
