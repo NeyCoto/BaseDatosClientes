@@ -1,118 +1,64 @@
 import bcrypt from "bcrypt";
-import {
-  SafeUser,
-  LoginResult,
-  RegisterResult,
-  AuthTokens,
-} from "../types/auth.types";
+import { SafeUser, LoginResult } from "../types/auth.types";
 import { RegisterInput, LoginInput } from "../config/auth.schemas";
-import { generateTokenPair, verifyRefreshToken } from "../config/jwt";
+import { signToken } from "../config/jwt";
 import {
-  findUserByEmail,
+  findUserByUsername,
   findUserById,
-  userExistsByEmail,
+  usernameExists,
   createUser,
 } from "../repositories/user.repository";
 import { AppError } from "../types";
 
-// ─── Constants ────────────────────────────────────────────────────────────────
-
-// bcrypt cost factor — 12 is the production standard (balances security vs latency)
-// Each increment doubles the hashing time: 12 ≈ 250ms, 13 ≈ 500ms
-const BCRYPT_ROUNDS = 12;
-
-// Generic message used for both "user not found" and "wrong password" to prevent
-// user enumeration attacks (an attacker shouldn't know which part was wrong)
-const INVALID_CREDENTIALS_MSG = "Invalid email or password";
+const BCRYPT_ROUNDS = 10; // 10 is solid for a university project (~100ms)
 
 // ─── Register ─────────────────────────────────────────────────────────────────
 
-export async function registerUser(input: RegisterInput): Promise<RegisterResult> {
-  const { name, email, password, role } = input;
+export async function registerUser(input: RegisterInput): Promise<LoginResult> {
+  const { username, password, role } = input;
 
-  // 1. Check uniqueness
-  const exists = await userExistsByEmail(email);
-  if (exists) {
-    throw new AppError("An account with this email already exists", 409);
+  if (await usernameExists(username)) {
+    throw new AppError("Username is already taken", 409);
   }
 
-  // 2. Hash password — never store plain text
   const passwordHash = await bcrypt.hash(password, BCRYPT_ROUNDS);
+  const user = await createUser({ username, passwordHash, role });
+  const token = signToken(user.id, user.username, user.role);
 
-  // 3. Persist
-  const user = await createUser({ name, email, passwordHash, role });
-
-  // 4. Issue tokens immediately so the user is logged in after registering
-  const tokens = generateTokenPair(user.id, user.email, user.role);
-
-  return { user, tokens };
+  return { user, token };
 }
 
 // ─── Login ────────────────────────────────────────────────────────────────────
 
 export async function loginUser(input: LoginInput): Promise<LoginResult> {
-  const { email, password } = input;
+  const { username, password } = input;
 
-  // 1. Fetch full row — we need password_hash for comparison
-  const userRow = await findUserByEmail(email);
-
-  // 2. Use timing-safe comparison even when user doesn't exist to prevent
-  //    timing attacks that reveal valid emails
-  const dummyHash =
-    "$2b$12$invalidhashfortimingsafety000000000000000000000000000";
+  // Always run bcrypt.compare even if user not found — prevents timing attacks
+  const userRow = await findUserByUsername(username);
+  const dummyHash = "$2b$10$invalidhashfortimingsafetyxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
   const hashToCompare = userRow?.password_hash ?? dummyHash;
+
   const passwordMatches = await bcrypt.compare(password, hashToCompare);
 
   if (!userRow || !passwordMatches) {
-    throw new AppError(INVALID_CREDENTIALS_MSG, 401);
+    throw new AppError("Invalid username or password", 401);
   }
 
-  // 3. Block deactivated accounts
-  if (!userRow.is_active) {
-    throw new AppError("This account has been deactivated", 403);
-  }
-
-  // 4. Build safe user (strip password_hash before sending to client)
   const user: SafeUser = {
     id: userRow.id,
-    email: userRow.email,
-    name: userRow.name,
+    username: userRow.username,
     role: userRow.role,
-    is_active: userRow.is_active,
     created_at: userRow.created_at,
   };
 
-  // 5. Issue tokens
-  const tokens = generateTokenPair(user.id, user.email, user.role);
-
-  return { user, tokens };
+  const token = signToken(user.id, user.username, user.role);
+  return { user, token };
 }
 
-// ─── Refresh token ────────────────────────────────────────────────────────────
-
-export async function refreshTokens(refreshToken: string): Promise<AuthTokens> {
-  // 1. Verify the incoming refresh token (throws AppError if invalid/expired)
-  const payload = verifyRefreshToken(refreshToken);
-
-  // 2. Confirm the user still exists and is active
-  const user = await findUserById(payload.sub);
-  if (!user) {
-    throw new AppError("User no longer exists", 401);
-  }
-  if (!user.is_active) {
-    throw new AppError("This account has been deactivated", 403);
-  }
-
-  // 3. Issue a fresh token pair (both access + refresh rotate)
-  return generateTokenPair(user.id, user.email, user.role);
-}
-
-// ─── Get current user profile ─────────────────────────────────────────────────
+// ─── Get current user ─────────────────────────────────────────────────────────
 
 export async function getCurrentUser(userId: string): Promise<SafeUser> {
   const user = await findUserById(userId);
-  if (!user) {
-    throw new AppError("User not found", 404);
-  }
+  if (!user) throw new AppError("User not found", 404);
   return user;
 }

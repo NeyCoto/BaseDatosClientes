@@ -1,78 +1,62 @@
-// ─── User roles ───────────────────────────────────────────────────────────────
+// ─── Roles ────────────────────────────────────────────────────────────────────
 
-export const USER_ROLES = ["admin", "user"] as const;
+export const USER_ROLES = ["admin", "general"] as const;
 export type UserRole = (typeof USER_ROLES)[number];
 
-// ─── Database row shape (matches your existing `users` table) ─────────────────
+// ─── Database row (matches your users table) ──────────────────────────────────
 
 export interface UserRow {
   id: string;
-  email: string;
+  username: string;
   password_hash: string;
-  name: string;
   role: UserRole;
-  is_active: boolean;
   created_at: Date;
-  updated_at: Date;
 }
 
-// ─── Safe user — never expose password_hash to the client ────────────────────
+// ─── Safe user — password_hash never leaves the repository layer ──────────────
 
 export interface SafeUser {
   id: string;
-  email: string;
-  name: string;
+  username: string;
   role: UserRole;
-  is_active: boolean;
   created_at: Date;
 }
 
-// ─── JWT payload — what gets encoded inside the token ────────────────────────
+// ─── JWT payload ──────────────────────────────────────────────────────────────
 
 export interface JwtPayload {
-  sub: string;      // user id (subject — standard JWT claim)
-  email: string;
+  sub: string;     // user id
+  username: string;
   role: UserRole;
-  iat?: number;     // issued at  — added automatically by jsonwebtoken
-  exp?: number;     // expiry     — added automatically by jsonwebtoken
+  iat?: number;
+  exp?: number;
 }
 
-// ─── Request bodies (validated by Zod; typed here for controller params) ──────
+// ─── Request body shapes ──────────────────────────────────────────────────────
 
 export interface RegisterBody {
-  name: string;
-  email: string;
+  username: string;
   password: string;
-  role?: UserRole;  // optional — defaults to "user" inside the service
+  role?: UserRole;
 }
 
 export interface LoginBody {
-  email: string;
+  username: string;
   password: string;
 }
 
-// ─── Auth service return shapes ───────────────────────────────────────────────
-
-export interface AuthTokens {
-  accessToken: string;
-  refreshToken: string;
-}
+// ─── Auth result ──────────────────────────────────────────────────────────────
 
 export interface LoginResult {
   user: SafeUser;
-  tokens: AuthTokens;
+  token: string;
 }
 
-export interface RegisterResult {
-  user: SafeUser;
-  tokens: AuthTokens;
-}
-
-// ─── Augment Express Request so req.user is fully typed everywhere ────────────
+// ─── Augment Express Request ──────────────────────────────────────────────────
 
 export interface AuthenticatedUser {
   id: string;
-  email: string;
+  username: string;
   role: UserRole;
 }
 

@@ -8,7 +8,7 @@ import { errorHandler, notFoundHandler } from "./middleware/errorHandler";
 import { requestLogger } from "./middleware/requestLogger";
 import healthRoutes from "./routes/healthRoutes";
 import authRoutes from "./routes/auth.routes";
-import adminRoutes from "./routes/admin.routes";
+import userAdminRoutes from "./routes/user-admin.routes";
 
 // ─── CORS ─────────────────────────────────────────────────────────────────────
 
@@ -16,10 +16,7 @@ const allowedOrigins = env.CORS_ORIGIN.split(",").map((o) => o.trim());
 
 const corsOptions: cors.CorsOptions = {
   origin: (origin, callback) => {
-    if (!origin) {
-      callback(null, true);
-      return;
-    }
+    if (!origin) { callback(null, true); return; }
     if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -33,7 +30,6 @@ const corsOptions: cors.CorsOptions = {
 
 // ─── Rate limiters ────────────────────────────────────────────────────────────
 
-// General limiter for all routes
 const generalLimiter = rateLimit({
   windowMs: env.RATE_LIMIT_WINDOW_MS,
   max: env.RATE_LIMIT_MAX_REQUESTS,
@@ -42,42 +38,35 @@ const generalLimiter = rateLimit({
   message: { success: false, error: "Too many requests — please try again later" },
 });
 
-// Strict limiter specifically for auth routes to slow brute-force attacks
 const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 20,                   // 20 login attempts per 15 min per IP
+  windowMs: 15 * 60 * 1000,
+  max: 20,
   standardHeaders: true,
   legacyHeaders: false,
-  message: { success: false, error: "Too many auth attempts — please wait 15 minutes" },
+  message: { success: false, error: "Too many login attempts — please wait 15 minutes" },
 });
 
-// ─── App factory ─────────────────────────────────────────────────────────────
+// ─── App ──────────────────────────────────────────────────────────────────────
 
 export function createApp(): Application {
   const app = express();
 
-  // ── Security ──────────────────────────────────────────────────────────────
   app.use(helmet());
   app.use(cors(corsOptions));
   app.use(generalLimiter);
-
-  // ── Body parsing ──────────────────────────────────────────────────────────
   app.use(express.json({ limit: "10kb" }));
   app.use(express.urlencoded({ extended: true, limit: "10kb" }));
-
-  // ── Dev logging ───────────────────────────────────────────────────────────
   app.use(requestLogger);
 
   // ── Routes ────────────────────────────────────────────────────────────────
-  app.use("/health", healthRoutes);
-  app.use("/api/auth", authLimiter, authRoutes);   // stricter rate limit on auth
-  app.use("/api/admin", adminRoutes);
+  app.use("/health",            healthRoutes);
+  app.use("/api/auth",          authLimiter, authRoutes);
+  app.use("/api/admin/users",   userAdminRoutes);   // ← NEW
 
-  // Future feature routes slot in here:
-  // app.use("/api/customers", authenticate, customerRoutes);
-  // app.use("/api/campaigns", authenticate, campaignRoutes);
+  // Next milestones slot in here:
+  // app.use("/api/customers",  authenticate, customerRoutes);
+  // app.use("/api/campaigns",  authenticate, campaignRoutes);
 
-  // ── 404 + error handlers (must be last) ───────────────────────────────────
   app.use(notFoundHandler);
   app.use(errorHandler);
 

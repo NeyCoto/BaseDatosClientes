@@ -1,0 +1,222 @@
+/* ── Fonts ────────────────────────────────────────────────────────────────────
+   Syne — geometric display font with strong personality
+   DM Mono — readable monospace for data and labels
+*/
+
+/* ── Design tokens ───────────────────────────────────────────────────────────── */
+
+:root {
+  /* Palette — deep charcoal with amber accent */
+  --bg:          #0e0f11;
+  --surface:     #14161a;
+  --surface-2:   #1a1d22;
+  --border:      #252830;
+  --text:        #e8eaf0;
+  --text-muted:  #5a6070;
+  --accent:      #e8a020;
+  --accent-dim:  rgba(232, 160, 32, 0.07);
+  --accent-rgb:  232, 160, 32;
+  --green:       #3ecf8e;
+  --green-dim:   rgba(62, 207, 142, 0.07);
+  --red:         #e85d5d;
+  --red-dim:     rgba(232, 93, 93, 0.08);
+
+  /* Typography */
+  --font-display: "Syne", sans-serif;
+  --font-mono:    "DM Mono", monospace;
+  --font-body:    "Syne", sans-serif;
+
+  /* Spacing */
+  --radius: 0px;  /* deliberately square — industrial aesthetic */
+}
+
+/* ── Reset ───────────────────────────────────────────────────────────────────── */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html { font-size: 16px; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Keyframes ────────────────────────────────────────────────────────────────── */
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+
+/* ── Cards ───────────────────────────────────────────────────────────────────── */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 24px;
+  animation: fadeIn 0.25s ease;
+}
+
+.card-header {
+  margin-bottom: 20px;
+}
+
+.card-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.01em;
+  color: var(--text);
+}
+
+.card-subtitle {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  font-family: var(--font-mono);
+}
+
+/* ── Form elements ───────────────────────────────────────────────────────────── */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.input {
+  width: 100%;
+  padding: 9px 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 13px;
+  font-family: var(--font-mono);
+  outline: none;
+  transition: border-color 0.15s;
+  appearance: none;
+}
+
+.input:focus {
+  border-color: var(--accent);
+}
+
+.input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+.input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+select.input {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%235a6070' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────────────── */
+
+button {
+  font-family: var(--font-mono);
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  padding: 10px 20px;
+  background: var(--accent);
+  color: var(--bg);
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #f0ac30;
+}
+
+.btn-primary:disabled {
+  opacity: 0.45;
+}
+
+.btn-ghost {
+  padding: 7px 14px;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+
+.btn-ghost:hover:not(:disabled) {
+  background: var(--surface-2);
+  color: var(--text);
+  border-color: var(--text-muted);
+}
+
+.btn-ghost:disabled {
+  opacity: 0.35;
+}
+
+.btn-danger {
+  padding: 5px 12px;
+  background: transparent;
+  color: var(--red);
+  border: 1px solid var(--red);
+  font-size: 11px;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: var(--red-dim);
+}
+
+.btn-danger:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* ── Scrollbar ───────────────────────────────────────────────────────────────── */
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ── Responsive — collapse to single column on smaller screens ───────────────── */
+
+@media (max-width: 900px) {
+  /* DashboardPage grid */
+  .dashboard-grid {
+    grid-template-columns: 1fr !important;
+  }
+}

@@ -1,52 +1,26 @@
 import { z } from "zod";
 import { USER_ROLES } from "../types/auth.types";
 
-// ─── Register ─────────────────────────────────────────────────────────────────
-
 export const registerSchema = z.object({
-  name: z
+  username: z
     .string()
-    .min(2, "Name must be at least 2 characters")
-    .max(100, "Name must be at most 100 characters")
-    .trim(),
-
-  email: z
-    .string()
-    .email("Must be a valid email address")
-    .toLowerCase()
+    .min(3, "Username must be at least 3 characters")
+    .max(50, "Username must be at most 50 characters")
+    .regex(/^[a-zA-Z0-9_]+$/, "Username can only contain letters, numbers, and underscores")
     .trim(),
 
   password: z
     .string()
-    .min(8, "Password must be at least 8 characters")
-    .max(72, "Password must be at most 72 characters") // bcrypt hard limit
-    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-    .regex(/[a-z]/, "Password must contain at least one lowercase letter")
-    .regex(/[0-9]/, "Password must contain at least one number"),
+    .min(6, "Password must be at least 6 characters")
+    .max(72, "Password must be at most 72 characters"),
 
-  role: z.enum(USER_ROLES).optional().default("user"),
+  role: z.enum(USER_ROLES).optional().default("general"),
 });
 
-// ─── Login ────────────────────────────────────────────────────────────────────
-
 export const loginSchema = z.object({
-  email: z
-    .string()
-    .email("Must be a valid email address")
-    .toLowerCase()
-    .trim(),
-
+  username: z.string().min(1, "Username is required").trim(),
   password: z.string().min(1, "Password is required"),
 });
 
-// ─── Refresh token ────────────────────────────────────────────────────────────
-
-export const refreshSchema = z.object({
-  refreshToken: z.string().min(1, "Refresh token is required"),
-});
-
-// ─── Inferred types (used in controllers) ────────────────────────────────────
-
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
-export type RefreshInput = z.infer<typeof refreshSchema>;
