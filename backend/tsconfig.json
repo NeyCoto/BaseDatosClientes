@@ -11,6 +11,7 @@
 
     /* Module resolution */
     "moduleResolution": "NodeNext",
+    "types": ["node"],
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
