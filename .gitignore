@@ -5,6 +5,8 @@ dist/
 .env
 .env.local
 .env.production
+backend.env
+frontend.env.local
 
 # OS / editor
 .DS_Store
