@@ -1,0 +1,8 @@
+$kind: http-request
+url: ?status=prospect
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+queryParams:
+  status: prospect
+order: 4000

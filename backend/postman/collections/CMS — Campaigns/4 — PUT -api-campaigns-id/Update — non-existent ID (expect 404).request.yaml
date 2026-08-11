@@ -1,0 +1,14 @@
+$kind: http-request
+url: "{{baseUrl}}/api/campaigns/00000000-0000-0000-0000-000000000000"
+method: PUT
+headers:
+  Authorization: Bearer {{token}}
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "name": "Should 404",
+      "is_active": true
+    }
+order: 3000

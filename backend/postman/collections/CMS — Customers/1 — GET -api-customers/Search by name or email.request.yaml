@@ -1,0 +1,8 @@
+$kind: http-request
+url: ?search=john
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+queryParams:
+  search: john
+order: 3000

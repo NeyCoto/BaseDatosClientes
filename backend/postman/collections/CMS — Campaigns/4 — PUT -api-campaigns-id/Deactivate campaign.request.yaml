@@ -1,0 +1,17 @@
+$kind: http-request
+url: "{{baseUrl}}/api/campaigns/{{campaignId}}"
+method: PUT
+headers:
+  Authorization: Bearer {{token}}
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "name": "Spring Campaign 2025 (Updated)",
+      "description": "Updated description",
+      "start_date": "2025-03-01",
+      "end_date": "2025-06-30",
+      "is_active": false
+    }
+order: 2000

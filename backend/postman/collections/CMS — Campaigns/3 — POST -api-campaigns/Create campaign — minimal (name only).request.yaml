@@ -1,0 +1,14 @@
+$kind: http-request
+url: "{{baseUrl}}/api/campaigns"
+method: POST
+headers:
+  Authorization: Bearer {{token}}
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "name": "Quick Campaign",
+      "is_active": true
+    }
+order: 2000

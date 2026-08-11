@@ -1,0 +1,8 @@
+$kind: http-request
+url: ?status=active
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+queryParams:
+  status: active
+order: 5000

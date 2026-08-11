@@ -3,7 +3,7 @@
 export const USER_ROLES = ["admin", "general"] as const;
 export type UserRole = (typeof USER_ROLES)[number];
 
-// ─── API envelope — matches backend ApiResponse<T> ───────────────────────────
+// ─── API envelope ─────────────────────────────────────────────────────────────
 
 export interface ApiResponse<T> {
   success: true;
@@ -17,7 +17,7 @@ export interface ApiErrorResponse {
   details?: string[];
 }
 
-// ─── Auth — matches backend LoginResult ───────────────────────────────────────
+// ─── Auth ─────────────────────────────────────────────────────────────────────
 
 export interface AuthUser {
   id: string;
@@ -37,7 +37,7 @@ export interface LoginResponse {
   token: string;
 }
 
-// ─── Users — matches backend SafeUserFull + PaginatedUsers ───────────────────
+// ─── Users ────────────────────────────────────────────────────────────────────
 
 export interface User {
   id: string;
@@ -67,8 +67,6 @@ export interface DeleteUserResponse {
   username: string;
 }
 
-// ─── Query params ─────────────────────────────────────────────────────────────
-
 export interface UserListParams {
   page?: number;
   limit?: number;
@@ -84,4 +82,131 @@ export interface AuthContextValue {
   login: (credentials: LoginRequest) => Promise<void>;
   logout: () => void;
   isAuthenticated: boolean;
+}
+
+// ─── Campaigns ────────────────────────────────────────────────────────────────
+
+export interface Campaign {
+  id: string;
+  name: string;
+  description: string | null;
+  start_date: string | null;
+  end_date: string | null;
+  is_active: boolean;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PaginatedCampaigns {
+  items: Campaign[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+export interface CreateCampaignRequest {
+  name: string;
+  description?: string;
+  start_date?: string;
+  end_date?: string;
+  is_active: boolean;
+}
+
+export interface UpdateCampaignRequest {
+  name: string;
+  description?: string;
+  start_date?: string;
+  end_date?: string;
+  is_active: boolean;
+}
+
+export interface DeleteCampaignResponse {
+  id: string;
+  name: string;
+}
+
+export interface CampaignListParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  is_active?: "true" | "false" | "";
+}
+
+// ─── Customers ────────────────────────────────────────────────────────────────
+
+export interface Customer {
+  id: string;
+  first_name: string;
+  last_name: string;
+  phone: string | null;
+  email: string;
+  alternative_email: string | null;
+  country: string | null;
+  city: string | null;
+  campaign_id: string | null;
+  campaign_name: string | null;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PaginatedCustomers {
+  items: Customer[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+export interface CreateCustomerRequest {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone?: string;
+  alternative_email?: string;
+  country?: string;
+  city?: string;
+  campaign_id?: string;
+}
+
+export interface UpdateCustomerRequest {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone?: string;
+  alternative_email?: string;
+  country?: string;
+  city?: string;
+  campaign_id?: string | null;
+}
+
+export interface DeleteCustomerResponse {
+  id: string;
+  first_name: string;
+  last_name: string;
+}
+
+export interface CustomerListParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  campaign_id?: string | "";
+}
+
+// ─── Customer import ──────────────────────────────────────────────────────────
+
+export interface CustomerImportError {
+  row: number;
+  field: string | null;
+  value: string | null;
+  message: string;
+}
+
+export interface CustomerImportResult {
+  totalRows: number;
+  imported: number;
+  failed: number;
+  errors: CustomerImportError[];
 }

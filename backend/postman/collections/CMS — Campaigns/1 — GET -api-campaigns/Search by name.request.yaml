@@ -1,0 +1,8 @@
+$kind: http-request
+url: ?search=spring
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+queryParams:
+  search: spring
+order: 3000

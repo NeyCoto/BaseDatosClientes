@@ -9,8 +9,7 @@ import { requestLogger } from "./middleware/requestLogger";
 import healthRoutes from "./routes/healthRoutes";
 import authRoutes from "./routes/auth.routes";
 import userAdminRoutes from "./routes/user-admin.routes";
-import campaignRoutes from "./routes/campaign.routes";
-import customerRoutes from "./routes/customer.routes";
+import campaignRoutes from "./routes/campaign.routes";   // ← NEW
 
 // ─── CORS ─────────────────────────────────────────────────────────────────────
 
@@ -61,17 +60,13 @@ export function createApp(): Application {
   app.use(requestLogger);
 
   // ── Routes ────────────────────────────────────────────────────────────────
-  app.use("/health",            healthRoutes);
-  app.use("/api/auth",          authLimiter, authRoutes);
-  app.use("/api/admin/users",   userAdminRoutes);
-  app.use("/api/campaigns",   campaignRoutes);   
-  app.use("/api/customers",   customerRoutes);
+  app.use("/health",          healthRoutes);
+  app.use("/api/auth",        authLimiter, authRoutes);
+  app.use("/api/admin/users", userAdminRoutes);
+  app.use("/api/campaigns",   campaignRoutes);             // ← NEW
 
   app.use(notFoundHandler);
   app.use(errorHandler);
-  // Next milestones slot in here:
-  // app.use("/api/customers",  authenticate, customerRoutes);
-  // app.use("/api/campaigns",  authenticate, campaignRoutes);
 
   return app;
 }

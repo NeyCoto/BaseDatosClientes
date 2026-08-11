@@ -1,0 +1,20 @@
+$kind: http-request
+url: "{{baseUrl}}/api/customers/{{customerId}}"
+method: PUT
+headers:
+  Authorization: Bearer {{token}}
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "first_name": "John",
+      "last_name": "Doe",
+      "email": "john.doe.updated@example.com",
+      "phone": "+1 555 999 8888",
+      "country": "United States",
+      "city": "Los Angeles",
+      "status": "lead",
+      "campaign_id": "{{campaignId}}"
+    }
+order: 1000

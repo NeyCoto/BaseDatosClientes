@@ -1,0 +1,14 @@
+$kind: http-request
+url: "{{baseUrl}}/api/campaigns"
+method: POST
+headers:
+  Authorization: Bearer REPLACE_WITH_GENERAL_USER_TOKEN
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "name": "Should Fail",
+      "is_active": true
+    }
+order: 4000

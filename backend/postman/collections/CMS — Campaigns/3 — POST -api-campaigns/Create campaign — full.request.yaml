@@ -1,0 +1,26 @@
+$kind: http-request
+url: "{{baseUrl}}/api/campaigns"
+method: POST
+headers:
+  Authorization: Bearer {{token}}
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "name": "Spring Campaign 2025",
+      "description": "Q1 outreach campaign targeting new leads",
+      "start_date": "2025-03-01",
+      "end_date": "2025-05-31",
+      "is_active": true
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      const json = pm.response.json();
+      if (json.success && json.data.id) {
+        pm.collectionVariables.set('campaignId', json.data.id);
+        console.log('campaignId saved:', json.data.id);
+      }
+    language: text/javascript
+order: 1000

@@ -1,0 +1,30 @@
+$kind: http-request
+url: "{{baseUrl}}/api/customers"
+method: POST
+headers:
+  Authorization: Bearer {{token}}
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "first_name": "John",
+      "last_name": "Doe",
+      "email": "john.doe@example.com",
+      "phone": "+1 555 123 4567",
+      "alternative_email": "j.doe@work.com",
+      "country": "United States",
+      "city": "New York",
+      "status": "prospect",
+      "campaign_id": "{{campaignId}}"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      const json = pm.response.json();
+      if (json.success && json.data.id) {
+        pm.collectionVariables.set('customerId', json.data.id);
+        console.log('customerId saved:', json.data.id);
+      }
+    language: text/javascript
+order: 1000

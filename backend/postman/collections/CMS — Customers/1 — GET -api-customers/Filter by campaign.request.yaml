@@ -1,0 +1,8 @@
+$kind: http-request
+url: ?campaign_id={{campaignId}}
+method: GET
+headers:
+  Authorization: Bearer {{token}}
+queryParams:
+  campaign_id: "{{campaignId}}"
+order: 6000

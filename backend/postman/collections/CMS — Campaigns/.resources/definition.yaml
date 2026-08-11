@@ -1,0 +1,6 @@
+$kind: collection
+description: Campaign CRUD endpoints. Run 'Login' first to populate the token variable automatically.
+variables:
+  baseUrl: http://localhost:3001
+  token: ""
+  campaignId: ""

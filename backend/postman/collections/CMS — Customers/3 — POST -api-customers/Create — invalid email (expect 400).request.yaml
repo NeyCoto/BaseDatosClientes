@@ -1,0 +1,16 @@
+$kind: http-request
+url: "{{baseUrl}}/api/customers"
+method: POST
+headers:
+  Authorization: Bearer {{token}}
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "first_name": "Bad",
+      "last_name": "Email",
+      "email": "not-an-email",
+      "status": "prospect"
+    }
+order: 3000

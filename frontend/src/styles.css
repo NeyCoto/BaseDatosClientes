@@ -1,12 +1,8 @@
-/* ── Fonts ────────────────────────────────────────────────────────────────────
-   Syne — geometric display font with strong personality
-   DM Mono — readable monospace for data and labels
-*/
+/* ── Fonts ──────────────────────────────────────────────────────────────────── */
 
-/* ── Design tokens ───────────────────────────────────────────────────────────── */
+/* ── Design tokens ──────────────────────────────────────────────────────────── */
 
 :root {
-  /* Palette — deep charcoal with amber accent */
   --bg:          #0e0f11;
   --surface:     #14161a;
   --surface-2:   #1a1d22;
@@ -20,26 +16,16 @@
   --green-dim:   rgba(62, 207, 142, 0.07);
   --red:         #e85d5d;
   --red-dim:     rgba(232, 93, 93, 0.08);
-
-  /* Typography */
   --font-display: "Syne", sans-serif;
   --font-mono:    "DM Mono", monospace;
   --font-body:    "Syne", sans-serif;
-
-  /* Spacing */
-  --radius: 0px;  /* deliberately square — industrial aesthetic */
+  --radius: 0px;
 }
 
-/* ── Reset ───────────────────────────────────────────────────────────────────── */
+/* ── Reset ──────────────────────────────────────────────────────────────────── */
 
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; }
-
 body {
   font-family: var(--font-body);
   background: var(--bg);
@@ -48,7 +34,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ── Keyframes ────────────────────────────────────────────────────────────────── */
+/* ── Keyframes ──────────────────────────────────────────────────────────────── */
 
 @keyframes spin {
   to { transform: rotate(360deg); }
@@ -56,10 +42,10 @@ body {
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0);   }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ── Cards ───────────────────────────────────────────────────────────────────── */
+/* ── Cards ──────────────────────────────────────────────────────────────────── */
 
 .card {
   background: var(--surface);
@@ -67,11 +53,7 @@ body {
   padding: 24px;
   animation: fadeIn 0.25s ease;
 }
-
-.card-header {
-  margin-bottom: 20px;
-}
-
+.card-header { margin-bottom: 20px; }
 .card-title {
   font-family: var(--font-display);
   font-weight: 700;
@@ -79,7 +61,6 @@ body {
   letter-spacing: 0.01em;
   color: var(--text);
 }
-
 .card-subtitle {
   font-size: 12px;
   color: var(--text-muted);
@@ -87,13 +68,9 @@ body {
   font-family: var(--font-mono);
 }
 
-/* ── Form elements ───────────────────────────────────────────────────────────── */
+/* ── Form elements ──────────────────────────────────────────────────────────── */
 
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
+.field { display: flex; flex-direction: column; gap: 6px; }
 
 .label {
   font-size: 11px;
@@ -116,20 +93,9 @@ body {
   transition: border-color 0.15s;
   appearance: none;
 }
-
-.input:focus {
-  border-color: var(--accent);
-}
-
-.input::placeholder {
-  color: var(--text-muted);
-  opacity: 0.6;
-}
-
-.input:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
+.input:focus { border-color: var(--accent); }
+.input::placeholder { color: var(--text-muted); opacity: 0.6; }
+.input:disabled { opacity: 0.5; cursor: not-allowed; }
 
 select.input {
   cursor: pointer;
@@ -139,7 +105,7 @@ select.input {
   padding-right: 32px;
 }
 
-/* ── Buttons ─────────────────────────────────────────────────────────────────── */
+/* ── Buttons ────────────────────────────────────────────────────────────────── */
 
 button {
   font-family: var(--font-mono);
@@ -150,10 +116,7 @@ button {
   letter-spacing: 0.04em;
   white-space: nowrap;
 }
-
-button:disabled {
-  cursor: not-allowed;
-}
+button:disabled { cursor: not-allowed; }
 
 .btn-primary {
   padding: 10px 20px;
@@ -162,14 +125,8 @@ button:disabled {
   font-weight: 600;
   font-size: 13px;
 }
-
-.btn-primary:hover:not(:disabled) {
-  background: #f0ac30;
-}
-
-.btn-primary:disabled {
-  opacity: 0.45;
-}
+.btn-primary:hover:not(:disabled) { background: #f0ac30; }
+.btn-primary:disabled { opacity: 0.45; }
 
 .btn-ghost {
   padding: 7px 14px;
@@ -177,16 +134,12 @@ button:disabled {
   color: var(--text-muted);
   border: 1px solid var(--border);
 }
-
 .btn-ghost:hover:not(:disabled) {
   background: var(--surface-2);
   color: var(--text);
   border-color: var(--text-muted);
 }
-
-.btn-ghost:disabled {
-  opacity: 0.35;
-}
+.btn-ghost:disabled { opacity: 0.35; }
 
 .btn-danger {
   padding: 5px 12px;
@@ -195,28 +148,18 @@ button:disabled {
   border: 1px solid var(--red);
   font-size: 11px;
 }
+.btn-danger:hover:not(:disabled) { background: var(--red-dim); }
+.btn-danger:disabled { opacity: 0.3; cursor: not-allowed; }
 
-.btn-danger:hover:not(:disabled) {
-  background: var(--red-dim);
-}
-
-.btn-danger:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-
-/* ── Scrollbar ───────────────────────────────────────────────────────────────── */
+/* ── Scrollbar ──────────────────────────────────────────────────────────────── */
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--border); }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
-/* ── Responsive — collapse to single column on smaller screens ───────────────── */
+/* ── Responsive ─────────────────────────────────────────────────────────────── */
 
 @media (max-width: 900px) {
-  /* DashboardPage grid */
-  .dashboard-grid {
-    grid-template-columns: 1fr !important;
-  }
+  .dashboard-grid { grid-template-columns: 1fr !important; }
 }

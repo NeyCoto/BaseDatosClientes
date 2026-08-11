@@ -1,0 +1,7 @@
+$kind: collection
+description: Customer CRUD endpoints. Run '0 — Login' first to save the token automatically. Create a campaign first if you want to test campaign_id assignment.
+variables:
+  baseUrl: http://localhost:3001
+  token: ""
+  customerId: ""
+  campaignId: ""

@@ -1,0 +1,3 @@
+$kind: collection
+name: 4 — PUT /api/customers/:id
+order: 5000

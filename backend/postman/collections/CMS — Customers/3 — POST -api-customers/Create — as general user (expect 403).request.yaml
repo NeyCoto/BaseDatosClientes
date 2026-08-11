@@ -1,0 +1,16 @@
+$kind: http-request
+url: "{{baseUrl}}/api/customers"
+method: POST
+headers:
+  Authorization: Bearer REPLACE_WITH_GENERAL_TOKEN
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "first_name": "Should",
+      "last_name": "Fail",
+      "email": "should.fail@example.com",
+      "status": "prospect"
+    }
+order: 6000
