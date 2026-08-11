@@ -32,7 +32,7 @@ export interface ValidatedImportRow {
   rowNumber: number;
   first_name: string;
   last_name: string;
-  email: string;
+  email: string | undefined;
   phone: string | undefined;
   company: string | undefined;
   country: string | undefined;
